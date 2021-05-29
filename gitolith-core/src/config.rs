@@ -1,29 +1,33 @@
 use crate::error::Result;
+use regex::Regex;
 
 /// Configuration values.
-#[derive(
-	Default,
-	Debug,
-	Clone,
-	PartialEq,
-	serde_derive::Serialize,
-	serde_derive::Deserialize,
-)]
+#[derive(Debug, Clone, serde_derive::Serialize, serde_derive::Deserialize)]
 pub struct Config {
 	pub changelog: ChangelogConfig,
 }
 
 /// Changelog configuration.
-#[derive(
-	Default,
-	Debug,
-	Clone,
-	PartialEq,
-	serde_derive::Serialize,
-	serde_derive::Deserialize,
-)]
+#[derive(Debug, Clone, serde_derive::Serialize, serde_derive::Deserialize)]
 pub struct ChangelogConfig {
-	pub header: String,
+	pub header:          String,
+	pub body:            String,
+	pub footer:          String,
+	pub commit_parsers:  Vec<CommitParser>,
+	pub filter_group:    bool,
+	pub git_tag_pattern: String,
+	#[serde(with = "serde_regex")]
+	pub skip_tags_regex: Regex,
+}
+
+/// Parser for grouping commits.
+#[derive(Debug, Clone, serde_derive::Serialize, serde_derive::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CommitParser {
+	#[serde(with = "serde_regex")]
+	pub regex: Regex,
+	pub group: Option<String>,
+	pub skip:  Option<bool>,
 }
 
 impl Config {

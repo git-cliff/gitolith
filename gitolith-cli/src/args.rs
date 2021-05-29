@@ -23,7 +23,16 @@ pub struct Opt {
 	/// Sets the repository to parse commits from.
 	#[structopt(short, long, env, value_name = "PATH")]
 	pub repository: Option<PathBuf>,
-	/// Sets the configuration file name.
-	#[structopt(short, long, env, value_name = "FILE", default_value = "gitolith")]
+	/// Sets the configuration file.
+	#[structopt(
+		short,
+		long,
+		env,
+		value_name = "FILE",
+		default_value = "gitolith.toml"
+	)]
 	pub config:     String,
+	#[structopt(short, long, env, value_name = "TAG", allow_hyphen_values = true)]
+	/// Sets the tag for the latest version.
+	pub tag:        Option<String>,
 }
